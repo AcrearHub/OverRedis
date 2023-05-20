@@ -7,7 +7,11 @@ import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.api.java.tuple.Tuple2;
 
 /**
- * 批处理
+ * 批处理（过时）
+ * 1、创建Flink环境
+ * 2、从数据源读数据
+ * 3、调用API进行处理
+ * 4、汇总、输出结果
  */
 public class WordCountBatch {
     public static void main(String[] args) throws Exception {
@@ -27,9 +31,9 @@ public class WordCountBatch {
                         collector.collect(Tuple2.of(s2, 1));
                     }
                 })
-                //根据报错类型，添加return方法来解决
+                //由于使用Lambda，导致产生泛型擦除问题，需再次指定泛型
                 .returns(new TypeHint<Tuple2<String, Integer>>() {})
-                /*
+                /* 传入值：
                 KeySelector：任意类型都可以使用该方法，通过getKey方法来返回指定的key.
                 int：如果当前类型是Tuple,使用该方法，指定Tuple中的第几个元素作为key.
                 String：如果当前类型是P0J0(Bean),使用该方法，指定P0J0中的哪个属性作为key

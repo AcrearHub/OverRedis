@@ -9,6 +9,12 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 /**
  * 有界流处理
+ * 1、创建Flink环境
+ *  1.1、设置全局并行度
+ * 2、从数据源读数据
+ * 3、调用API进行处理
+ * 4、汇总、输出结果
+ * 5、启动程序执行
  */
 public class WordCountStreamBounded {
     public static void main(String[] args) throws Exception {
