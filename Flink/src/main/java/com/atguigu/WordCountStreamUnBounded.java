@@ -4,13 +4,14 @@ import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
+import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 /**
- * 有界流处理
+ * 无界流处理
  */
-public class WordCountStreamBounded {
+public class WordCountStreamUnBounded {
     public static void main(String[] args) throws Exception {
         //1、创建流式处理
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -18,8 +19,24 @@ public class WordCountStreamBounded {
         //设置全局并行度：不设置默认为全并行度；1为单线程执行
         env.setParallelism(1);
 
-        //2、从数据源读数据
-        DataStreamSource<String> stringDataStreamSource = env.readTextFile("D:\\Atguigu\\05_Code\\OverRedis\\OverRedis\\FlinkInput\\word.txt");
+        //2、获取外部传入参数，从socket端口读数据
+        ParameterTool parameterTool = ParameterTool.fromArgs(args);
+
+            //不指定时默认传hadoop102
+        String hostname;
+        hostname = parameterTool.get("hostname");
+        if (hostname==null || hostname.equals("")){
+            hostname = "hadoop102";
+        }
+            //不指定时默认传8888
+        int port;
+        try {
+            port = parameterTool.getInt("port");
+        } catch (Exception e) {
+            port = 8888;
+        }
+
+        DataStreamSource<String> stringDataStreamSource = env.socketTextStream(hostname,port);
 
         //3、调用Flink API进行转换处理
         stringDataStreamSource
