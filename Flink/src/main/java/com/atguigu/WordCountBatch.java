@@ -3,11 +3,12 @@ package com.atguigu;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.java.ExecutionEnvironment;
-import org.apache.flink.api.java.operators.AggregateOperator;
 import org.apache.flink.api.java.operators.DataSource;
-import org.apache.flink.api.java.operators.UnsortedGrouping;
 import org.apache.flink.api.java.tuple.Tuple2;
 
+/**
+ * 批处理
+ */
 public class WordCountBatch {
     public static void main(String[] args) throws Exception {
         //1、创建Flink环境
@@ -28,10 +29,10 @@ public class WordCountBatch {
                 })
                 //根据报错类型，添加return方法来解决
                 .returns(new TypeHint<Tuple2<String, Integer>>() {})
-                /* groupby中：
+                /*
                 KeySelector：任意类型都可以使用该方法，通过getKey方法来返回指定的key.
                 int：如果当前类型是Tuple,使用该方法，指定Tuple中的第几个元素作为key.
-                String：如果当前类型是P0J0(Bean),使用该方法，指定P0J0中的哪个属性作为水ey
+                String：如果当前类型是P0J0(Bean),使用该方法，指定P0J0中的哪个属性作为key
                 */
                 .groupBy(0)
         //4、汇总、输出结果
