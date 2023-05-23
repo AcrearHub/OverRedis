@@ -1,4 +1,4 @@
-package com.atguigu;
+package com.atguigu.wordcount;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;

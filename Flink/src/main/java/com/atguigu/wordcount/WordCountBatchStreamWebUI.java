@@ -1,29 +1,41 @@
-package com.atguigu;
+package com.atguigu.wordcount;
 
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.api.java.utils.ParameterTool;
+import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 
 /**
- * 无界流处理
+ * 流批一体，在Web页面显示
+ * 0、指定绑定窗口
  * 1、创建Flink环境
  *  1.1、设置全局并行度
+ *  1.2、设置执行模式
  * 2、从Socket读数据
  * 3、调用API进行处理
  * 4、汇总、输出结果
  * 5、启动程序执行
  */
-public class WordCountStreamUnBounded {
+public class WordCountBatchStreamWebUI {
     public static void main(String[] args) throws Exception {
-        //1、创建流式处理
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        //0、指定端口
+        Configuration configuration = new Configuration();
+        configuration.setInteger("rest.port",3210);
 
-        //设置全局并行度：不设置默认为全并行度；1为单线程执行
+        //1、创建流式处理
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(configuration);
+
+        //1.1、设置全局并行度：不设置默认为全并行度；1为单线程执行
         env.setParallelism(1);
+
+        //设置执行模式：建议不要在代码中写这个，改代码不方便，一般通过命令行参数指定
+//        env.setRuntimeMode(RuntimeExecutionMode.STREAMING);//流处理：默认
+//        env.setRuntimeMode(RuntimeExecutionMode.AUTOMATIC);//自动处理：有界流为BATCH，无解流为STRAMING
+//        env.setRuntimeMode(RuntimeExecutionMode.BATCH);//批处理，一般不设置
 
         //2、获取外部传入参数，从socket端口读数据
         ParameterTool parameterTool = ParameterTool.fromArgs(args);
