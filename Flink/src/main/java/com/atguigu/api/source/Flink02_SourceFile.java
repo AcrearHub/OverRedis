@@ -11,7 +11,7 @@ public class Flink02_SourceFile {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         FileSource<String> build = FileSource
-                .<String>forRecordStreamFormat(new TextLineInputFormat(), new Path("D:\\Atguigu\\05_Code\\OverRedis\\OverRedis\\FlinkInput\\word.txt"))
+                .forRecordStreamFormat(new TextLineInputFormat(), new Path("D:\\Atguigu\\05_Code\\OverRedis\\OverRedis\\FlinkInput\\word.txt"))
                 .build();
         env
                 .fromSource(build, WatermarkStrategy.noWatermarks(),"file")
