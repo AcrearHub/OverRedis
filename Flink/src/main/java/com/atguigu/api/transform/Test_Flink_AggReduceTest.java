@@ -12,7 +12,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 /**
  * reduce测试：需求：统计当前访问量最大的用户
  */
-public class Flink00_AggReduceTest {
+public class Test_Flink_AggReduceTest {
     public static void main(String[] args) throws Exception {
         //创建流式处理
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
