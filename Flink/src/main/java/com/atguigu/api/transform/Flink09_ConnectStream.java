@@ -21,20 +21,22 @@ public class Flink09_ConnectStream {
 
         stream1
                 .connect(stream3)
-                .process(new CoProcessFunction<Integer, String, String>() {
+                .process(
+                        new CoProcessFunction<Integer, String, String>() {
 
-            //处理第一条流的数据
-            @Override
-            public void processElement1(Integer value, CoProcessFunction<Integer, String, String>.Context ctx, Collector<String> out) {
-                out.collect(value.toString());
-            }
+                            //处理第一条流的数据
+                            @Override
+                            public void processElement1(Integer value, CoProcessFunction<Integer, String, String>.Context ctx, Collector<String> out) {
+                                out.collect(value.toString());
+                            }
 
-            //处理第一条流的数据
-            @Override
-            public void processElement2(String value, CoProcessFunction<Integer, String, String>.Context ctx, Collector<String> out) {
-                out.collect(value);
-            }
-        })
+                            //处理第二条流的数据
+                            @Override
+                            public void processElement2(String value, CoProcessFunction<Integer, String, String>.Context ctx, Collector<String> out) {
+                                out.collect(value);
+                            }
+                        }
+                )
                 .print("Connect");
 
         //启动程序执行
