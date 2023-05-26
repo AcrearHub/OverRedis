@@ -2,6 +2,7 @@ package com.atguigu.function;
 
 import com.atguigu.bean.Event;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
+import org.apache.flink.streaming.api.watermark.Watermark;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -25,6 +26,10 @@ public class ClickSource implements SourceFunction<Event> {
             Event event = new Event(users[random.nextInt(users.length)], urls[random.nextInt(urls.length)], System.currentTimeMillis());
             //发射数据
             sourceContext.collect(event);
+//              //发射数据+时间
+//              sourceContext.collectWithTimestamp(event,event.getTs());
+//              //发射水位线
+//              sourceContext.emitWatermark(new Watermark(event.getTs()));
             //限制生成时间
             TimeUnit.SECONDS.sleep(1);
         }
