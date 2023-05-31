@@ -17,7 +17,7 @@ import java.time.Duration;
 /**
  * 值状态
  */
-public class Flink03_ValueState {
+public class Flink03_ValueAndListState {
     public static void main(String[] args) throws Exception {
         //创建流式处理
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
@@ -41,7 +41,7 @@ public class Flink03_ValueState {
                 .process(new KeyedProcessFunction<String, WaterSensor, String>() {
                     //定义值状态
                     private ValueState<WaterSensor> valueState;
-                    //private ListState<WaterSensor> listState;
+                    private ListState<WaterSensor> listState;
 
                     /**
                      * 用open方法进行赋值
@@ -49,8 +49,10 @@ public class Flink03_ValueState {
                      */
                     @Override
                     public void open(Configuration parameters) {
-                        valueState = getRuntimeContext().getState(new ValueStateDescriptor<>("valueState", WaterSensor.class));
-                        //listState = getRuntimeContext().getListState(new ListStateDescriptor<>("listState", WaterSensor.class));
+                        ValueStateDescriptor<WaterSensor> valueStateDescriptor = new ValueStateDescriptor<>("valueState", WaterSensor.class);
+                        valueState = getRuntimeContext().getState(valueStateDescriptor);
+                        ListStateDescriptor<WaterSensor> listStateDescriptor = new ListStateDescriptor<>("listState", WaterSensor.class);
+                        listState = getRuntimeContext().getListState(listStateDescriptor);
                     }
 
                     @Override
